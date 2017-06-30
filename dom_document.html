@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>DOM中的document文档写入</title>
+</head>
+<body>
+	<div id="myDiv" class="box" aa="aa" dir="bb" title="skfkjf">The current date and time is:</div>
+	<script type="text/javascript">
+	//1.元素节点Element类型的nodeType = 1
+	//2.文本节点Text类型的nodeType = 3
+	//3.注释节点Comment类型的nodeType = 8
+
+	//attributes是以数组，childNodes是以数组。
+		document.write("<strong>" + (new Date()).toString() + "</strong>");
+		//document.write()可以动态加载外部资源。
+		//document.write("<script type=\"text/javascript\" src=\"file.js\">" + "<\/script>");//引入file.js文件
+		//window.onload事件处理程序等到页面完全加载后延迟执行函数，函数执行之后，字符串“Hello world”将会重写页面内容。
+		/*window.onload = function(){
+			document.write("Hello world");
+		}*/
+		//
+		var div = document.getElementById('myDiv');
+		console.log(div);
+		console.log(div.tagName);//大写的DIV
+		console.log(div.nodeName);//大写的DIV
+		console.log(div.tagName.toLowerCase());
+		console.log(div.className);//box----------注意：class是ECMAScript的保留字，所以用className
+		console.log(div.title);
+		console.log(div.attributes['dir'].nodeValue);//bb--------获取js的自定义属性
+		div.setAttribute("test","aaaaa");//设置js的自定义属性
+		console.log(div.attributes['test'].nodeValue);//aaaaa
+		console.log(div.getAttribute("aa"));//aa
+		console.log(div.getAttribute("test"));
+		console.log(div.attributes);//是一个数组，可以取到每一项的nodeValue,nodeName,nodeType
+		//元素节点的nodeType = 1
+		//文本节点的nodeType = 3
+		//创建文本节点
+		var element = document.createElement("div");console.log(111,element)
+		element.className = "message";
+		var textNode = document.createTextNode("Hello,worldaaaaaaaaaa");
+		element.appendChild(textNode);
+		document.body.appendChild(element);
+		//Text类型中相邻节点合并的方法-normalize()
+		var ele = document.createElement("div");
+		ele.className = "mes";
+		var txtNode = document.createTextNode("ni hao");
+		ele.appendChild(txtNode);
+		var anotherTxtNode = document.createTextNode("china");
+		ele.appendChild(anotherTxtNode);
+		document.body.appendChild(ele);
+		console.log(ele.childNodes.length);//2
+		ele.normalize();
+		console.log(ele.childNodes.length);
+		console.log(ele);
+		console.log(ele.childNodes)//ele.childNodes[0].nodeValue相当于ele.firstChild.nodeValue
+		console.log(ele.firstChild.nodeValue);//ni haochina
+		console.log(ele.childNodes[0].nodeValue);//ni haochina
+		//Text类型中一个节点分割为两个文本节点-splitText()
+		var ele = document.createElement("div");
+		ele.className = "mes";
+		var txtNode = document.createTextNode("ni hao");
+		ele.appendChild(txtNode);
+		document.body.appendChild(ele);
+		console.log(ele.childNodes.length);//1
+		var newNode = ele.firstChild.splitText(2);
+		console.log(ele.childNodes[0].nodeValue);//ni
+		console.log(newNode.nodeValue);//hao
+		console.log(ele.childNodes.length);//2
+	</script>
+</body>
+</html>
