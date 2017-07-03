@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>JSON对象</title>
+</head>
+<body>
+	<script type="text/javascript">
+		//JSON对象有两个方法：stringify()和parse(),stringify()用来把JavaScript对象序列化为JSON字符串，parse()是把JSON字符串解析为原生的Javascript值。
+
+		//一。stringify()用来把JavaScript对象序列化为JSON字符串
+		var book = {
+			title:"myBook",
+			authors:[
+				"Lili"
+			],
+			edition:3,
+			year:2011
+		};
+		var jsonText = JSON.stringify(book);
+		console.log(1,jsonText);
+		// 1 "{"title":"myBook","authors":["Lili"],"edition":3,"year":2011}"
+
+
+		//二。parse()是把JSON字符串解析为原生的Javascript值
+		var book = {
+			title:"myBook",
+			authors:[
+				"Lili"
+			],
+			edition:3,
+			year:2011,
+			releaseDate:new Date(2011,2,3)
+		};
+		var jsonText = JSON.stringify(book);
+		var bookCopy = JSON.parse(jsonText,function(key,value){
+			if(key == "releaseDate"){
+				return new Date(value);
+			}else{
+				return value;
+			}
+		});
+		console.log(2,bookCopy);
+		console.log(3,bookCopy.releaseDate.getFullYear());
+	</script>
+</body>
+</html>

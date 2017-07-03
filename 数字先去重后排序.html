@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>给你一些数字，你先去重后排序</title>
+</head>
+<body>
+	<script type="text/javascript">
+
+	Array.prototype.unique1 = function(){
+	 var res = [this[0]];
+	 for(var i = 1; i < this.length; i++){
+	  var repeat = false;
+	  for(var j = 0; j < res.length; j++){
+	   if(this[i] == res[j]){
+	    repeat = true;
+	    break;
+	   }
+	  }
+	  if(!repeat){
+	   res.push(this[i]);
+	  }
+	 }
+	 return res.sort();
+	}
+	var arr = [1, 'a', 'a', 'b', 'd', 'e', 'e', 1, 0]
+	console.log(arr.unique1());
+
+//方法一：遍历数组，建立新数组，利用indexOf判断是否存在于新数组中，不存在则push到新数组，最后返回新数组
+	function removeDuplicatedItem(ar) {
+	    var ret = [];
+
+	    for (var i = 0, j = ar.length; i < j; i++) {
+	        if (ret.indexOf(ar[i]) === -1) {//如果在数组中没找到字符串则返回 -1。
+	            ret.push(ar[i]);
+	        }
+	    }
+
+	    return ret;
+	}
+	var arr1 = [1,2,3,3,3,5,2,8,'你好','你好',]
+	console.log(removeDuplicatedItem(arr1));
+
+
+// 方法二：遍历数组，利用object对象保存数组值，判断数组值是否已经保存在object中，未保存则push到新数组并用object[arrayItem]=1的方式记录保存
+	function removeDuplicatedItem2(ar) {
+	    var tmp = {},
+	        ret = [];
+
+	    for (var i = 0, j = ar.length; i < j; i++) {
+	    	console.log(12,tmp[ar[i]]);
+	        if (!tmp[ar[i]]) {
+	            tmp[ar[i]] = 1;
+	            ret.push(ar[i]);
+	        }
+	    }
+
+	    return ret;
+	}
+	var arr2 = [10,10,9,7,8,1,2,3,3,3,5,2,8,'你好','你好',]
+	console.log(removeDuplicatedItem2(arr2));
+
+
+//方法三：数组下标判断法, 遍历数组，利用indexOf判断元素的值是否与当前索引相等，如相等则加入
+	function removeDuplicatedItem3(ar) {
+	    var ret = [];
+
+	    ar.forEach(function(e, i, ar) {//e为每个元素，i为序列号，ar是数组
+	    	console.log(e,111111,i,111112,ar);
+	    	console.log(ar.indexOf(e));//indexOf() 方法可返回某个指定的字符串值在字符串中首次出现的位置。
+	        if (ar.indexOf(e) === i) {
+	            ret.push(e);
+	        }
+	    });
+
+	    return ret;
+	}
+	var arr3 = [10,10,9,8,'你好','你好',];
+	console.log(removeDuplicatedItem3(arr3));
+
+
+	//之前经常用的数组去重的方法
+	function shuzuquchong(ar){debugger
+		var obj = {};
+		var arr = [];
+		for(var i=0,len=ar.length;i<len;i++){
+			obj[ar[i]] = ar[i];//对象key不能相等，是唯一的。
+		}
+		for(k in obj){//遍历对象用for-in
+			console.log('k为：'+k);
+			arr.push(k);
+		}
+		
+		return arr;
+	}
+	var arr4 = [1,10,3,10,3,'你好','你好','大家好','好','好'];
+	console.log(shuzuquchong(arr4))
+	</script>
+</body>
+</html>

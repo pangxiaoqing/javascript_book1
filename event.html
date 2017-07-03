@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>事件，冒泡事件，捕获事件，监听事件</title>
+</head>
+<body>
+	<p>jquery扩展后的事件捕获的写法</p>
+	<div>jquery扩展后的事件捕获的写法...</div>
+	<h2 id="atemp">原生js捕获事件的写法</h2>
+	<button id="myBtn">点击</button>
+
+
+	<script type="text/javascript" src="jquery-3.2.1.js"></script>
+	<script type="text/javascript">
+	    //三。jQuery $.extend写法（此方法在js方法上进行的改进）
+		$.fn.extend({
+            addEvent:function( type, handle, bool){
+                var el, thisLen=this.length;
+                bool?bool=bool:bool=false;
+                if( thisLen == 1){
+                    el = this[0];        //jquery对象转成 js对象
+                    el.addEventListener ? el.addEventListener(type, handle, bool ):
+                            el.attachEvent('on'+type, handle);
+                }else {
+                    for( var i=0;i<thisLen;i++ ){
+                        el = this[i];
+                        el.addEventListener ? el.addEventListener(type, handle, bool ):
+                                el.attachEvent('on'+type, handle);
+                    }
+                }
+            }
+        });
+        //使用方法
+		$("p").addEvent('click',function(e){
+			console.log('我被点中了');
+			console.log(e);
+		})
+		$("div").addEvent('click',function(e){
+			console.log('我被点中了...');
+			console.log(e);
+		})
+
+
+		//事件冒泡：是从最具体的元素冒泡逐级向上找到最不具体的元素（比如document）
+		//时间捕获：document对象最先接收到click事件，然后事件沿着DOM树依次向下，一直传播到事件的实际目标，最具体的元素。
+		//DOM事件流：规定事件流包含三个阶段，事件捕获阶段----处于目标阶段---事件冒泡阶段
+		//事件监听：分为两种，一种针对IE8以下的（element.attachEvent）(事件加on，比如'onclick')，一种针对其他浏览器的(element.addEventListener)，所以需要做判断使用。
+		//事件监听：都接收3个参数，要处理的事件名称，处理的事件函数，还有一个布尔值，布尔值为false的话，表示在冒泡阶段调用事件处理程序，布尔值为true，表示在捕获阶段调用事件处理程序。
+
+		//一，原生javascript写法：
+		var EventUtil = {
+		    // 添加事件监听
+		    add: function(element, type, callback){
+
+		        if(element.addEventListener){
+		            element.addEventListener(type, callback, false);
+		        } else if(element.attachEvent){
+		            element.attachEvent('on' + type, callback);
+		        } else {
+		            element['on' + type] = callback;
+		        }
+		    }
+		}
+		//原生javascript使用方式：
+		var at = document.getElementById('atemp');
+		EventUtil.add(at,'click',function(){
+			console.log('原生js捕获事件的写法');
+		})
+
+
+
+		//二。原生js写法扩展：
+		var EventUtil = {
+
+		    // 添加事件监听
+		    add: function(element, type, callback){
+
+		        if(element.addEventListener){
+		            element.addEventListener(type, callback, false);
+		        } else if(element.attachEvent){
+		            element.attachEvent('on' + type, callback);
+		        } else {
+		            element['on' + type] = callback;
+		        }
+		    },
+
+		    // 移除事件监听
+		    remove: function(element, type, callback){
+
+		        if(element.removeEventListener){
+		            element.removeEventListener(type, callback, false);
+		        } else if(element.detachEvent){
+		            element.detachEvent('on' + type, callback);
+		        } else {
+		            element['on' + type] = null;
+		        }
+
+		    },
+
+		    // 跨浏览器获取 event 对象
+		    getEvent: function(event){
+
+		        return event ? event : window.event;
+		    },
+
+		    // 跨浏览器获取 target 属性
+		    getTarget: function(event){
+
+		        return event.target || event.srcElement;
+		    },
+
+		    // 阻止事件的默认行为
+		    preventDefault: function(event){
+
+		        if(event.preventDefault){
+		            event.preventDefault();
+		        } else {
+		            event.returnValue = false;
+		        }
+		    },
+
+		    // 阻止事件流或使用 cancelBubble
+		    stopPropagation: function(){
+
+		        if(event.stopPropagation){
+		            event.stopPropagation();
+		        } else {
+		            event.cancelBubble = true;
+		        }
+		    }
+
+		};
+		//用法同js的原生用法
+
+
+
+
+
+		/*----------事件对象----------------------------------------------------------------*/
+		//在需要通过一个函数处理多个事件时，可以用type属性。
+		var btn = document.getElementById('myBtn');
+		var handler = function(event){
+			switch(event.type){
+				case "click":
+					alert("Clicked");
+					break;
+				case "mouseover":
+					event.target.style.backgroundColor = "red";
+					break;
+				case "mouseout":
+					event.target.style.backgroundColor = "";
+					break;
+			}
+		};
+		//要点：执行的时候事件一定要加on*****
+		btn.onclick = handler;
+		btn.onmouseover = handler;
+		btn.onmouseout = handler;
+
+
+
+
+	</script>
+</body>
+</html>
